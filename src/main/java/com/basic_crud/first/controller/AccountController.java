@@ -2,16 +2,14 @@ package com.basic_crud.first.controller;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import com.basic_crud.first.repository.*;
 import com.basic_crud.first.model.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class AccountController {
@@ -42,6 +40,8 @@ public class AccountController {
   @PutMapping("/editAccount/{id}")
   public String editAccount(@PathVariable("id") int id, @RequestBody Account account) {
 	  Account acc=repo.findById(id).get();
+	  if(Objects.isNull(acc))
+		  return null;
 	  String updates="";
 	  if(Objects.nonNull(account.getName()) && !"".equalsIgnoreCase(account.getName())) {
 		  acc.setName(account.getName());
@@ -76,7 +76,7 @@ public class AccountController {
 		  return acc;
 	  }
 	  else {
-		  return new Account();
+		  return null;
 	  }
 	  
   }
@@ -85,9 +85,11 @@ public class AccountController {
   public String deleteAccount(@PathVariable("id") int id) {
 	  Account acc=repo.findById(id).get();
 	  if(Objects.isNull(acc)) {
-		  return "Account Not Found!";
+		  return null;
 	  }
 	  repo.deleteById(id);
 	  return "Successfully Deleted!";
   }
+  
+  
 }
